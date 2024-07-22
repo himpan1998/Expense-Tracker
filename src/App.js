@@ -1,23 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState } from "react";
+import "./App.css";
 function App() {
+  const [expense, setExpense] = useState("");
+  const [amount, setAmount] = useState("");
+
+  const [expenses, setExpenses] = useState([]);
+  const addExpense = () => {
+    if (!expense || !amount) return;
+    const newExpense = {
+      id: expenses.length + 1,
+      tittle: expense,
+      amount: amount,
+    };
+    setExpenses([...expenses, newExpense]);
+    setExpense("");
+    setAmount("");
+  };
+
+  const deleteItem = (id) => {
+    setExpenses(expenses.filter((expenses) => expenses.id !== id));
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main">
+      <h1>Expense Tracker</h1>
+      <div>
+        <input
+          type="text"
+          placeholder="Expense"
+          value={expense}
+          onChange={(e) => setExpense(e.target.value)}
+        />
+      </div>
+      <div>
+        <input
+          type="number"
+          placeholder="Amount"
+          min="0"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+      </div>
+      <div>
+        <button onClick={addExpense}>Add Expense</button>
+      </div>
+      <ul className="expense-list">
+        {expenses.map((expense) => (
+          <li key={expense.id}>
+            <span>{expense.tittle}</span>
+            <span>{expense.amount}</span>
+            <button onClick={() => deleteItem(expense.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
